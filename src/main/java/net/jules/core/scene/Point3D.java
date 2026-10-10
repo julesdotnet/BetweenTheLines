@@ -11,7 +11,7 @@ public class Point3D {
 		this.u = (short)(u * 65535);
 		this.v = (short)(v * 65535);
 	}
-
+	//getters
 	public float getX() {
 		return x;
 	}
@@ -30,7 +30,7 @@ public class Point3D {
 	public float getV() {
 		return (v & 0xFFFF) / 65535.0f;
 	}
-
+	//setters
 	public void setX(float x) {
 		this.x = x;
 	}
@@ -45,5 +45,28 @@ public class Point3D {
 
 	public void setW(float w) {
 		this.w = w;
+	}
+	
+	//modders
+	public void modX(float x) {
+		this.x += x;
+	}
+
+	public void modY(float y) {
+		this.y += y;
+	}
+
+	public void modZ(float z) {
+		this.z += z;
+	}
+
+	public void modW(float w) {
+		this.w += w;
+	}
+	
+	public void mod(float x, float y, float z) {
+		modX(x);
+		modY(y);
+		modZ(z);
 	}
 }

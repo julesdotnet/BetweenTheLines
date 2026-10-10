@@ -35,13 +35,21 @@ public class Window extends JFrame implements Runnable{
 		
 		pack();
 		
-	}
-	
-	public void update(float delta) {
+		Thread t = new Thread(this);
+		
+		t.start();
 		
 	}
+	
+	//update all sorts of game shi
+	public void update(float delta) {
+		testBody.move(30 * delta, delta, delta);
+	}
+	
+	
 	@Override
 	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
 		
 		ScreenPoint[] screenTestPoint = testBody.getScreenPoints(mainCam);
@@ -50,14 +58,19 @@ public class Window extends JFrame implements Runnable{
 		for(ScreenPoint s : screenTestPoint) {
 			g2.fillRect(s.getX(), s.getY(), 5, 5);
 		}
-		
 	}
 	@Override
 	public void run() {
-		while(true) {
-			update();
-			repaint();
-		}
-		
+	    long lastTime = System.currentTimeMillis();
+
+	    while (true) {
+	        long currentTime = System.currentTimeMillis();
+
+	        float delta = (currentTime - lastTime) / 1000.0f;
+	        lastTime = currentTime;
+
+	        update(delta);
+	        repaint();
+	    }
 	}
  }
