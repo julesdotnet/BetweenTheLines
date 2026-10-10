@@ -1,5 +1,6 @@
 package net.jules.core.scene;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import net.jules.core.camera.Camera;
@@ -8,11 +9,13 @@ import net.jules.core.camera.ScreenPoint;
 public class Triangle3D {
 	//defining points
 	private Point3D[] points = new Point3D[3];
+	private Color color;
 	
-	public Triangle3D(Point3D p1, Point3D p2, Point3D p3) {
+	public Triangle3D(Point3D p1, Point3D p2, Point3D p3, Color c) {
 		points[0] = p1;
 		points[1] = p2;
 		points[2] = p3;
+		color = c;
 	}
 	
 	
@@ -48,5 +51,9 @@ public class Triangle3D {
 			sp.add(cam.projectToScreenSpace(p));
 		}
 		return sp.toArray(new ScreenPoint[0]);
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 }

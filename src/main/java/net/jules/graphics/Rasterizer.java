@@ -43,7 +43,12 @@ public class Rasterizer {
 		BufferedImage view = new BufferedImage(RenderPanel.DEFAULT_SIZE.width, RenderPanel.DEFAULT_SIZE.height, BufferedImage.TYPE_INT_ARGB);
 		
 		for(TriangleData d : triangleData) {
-			view.setRGB(d.getX(), d.getY(), d.getValue());
+			//yes, i am ashamed of myself, but yes, it is what it is
+			if (d.getX() >= 0 && d.getX() < RenderPanel.DEFAULT_SIZE.width) {
+				if (d.getY() >= 0 && d.getY() < RenderPanel.DEFAULT_SIZE.height) {
+					view.setRGB(d.getX(), d.getY(), d.getValue());
+				}
+			}
 		}
 		
 		triangleData.clear();
@@ -62,7 +67,7 @@ public class Rasterizer {
 						continue;
 					}
 					
-					triangleData.add(new TriangleData(x, y, 0, Color.red.getRGB()));
+					triangleData.add(new TriangleData(x, y, 0, t.getColor().getRGB()));
 					
 				}
 			}

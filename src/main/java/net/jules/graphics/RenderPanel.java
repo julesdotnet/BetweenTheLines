@@ -25,15 +25,20 @@ public class RenderPanel extends JPanel implements Runnable{
 	Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
 	Point3D p2 = new Point3D(400, 400, 3000, 0, 0);
 	Point3D p3 = new Point3D(-400, 400, 4500, 0, 0);
+	Point3D p4 = new Point3D(400, 400, 4500, 0, 0);
+	Point3D p5 = new Point3D(-400, -400, 3000, 0, 0);
+	Point3D p6 = new Point3D(400, -400, 3000, 0, 0);
+	Point3D p7 = new Point3D(-400, -400, 4500, 0, 0);
+	Point3D p8 = new Point3D(400, -400, 4500, 0, 0);
 	
-	GeoBody testBody = new GeoBody(p1, p2, p3,
-									new Point3D(400, 400, 4500, 0, 0),
-									new Point3D(-400, -400, 3000, 0, 0),
-									new Point3D(400, -400, 3000, 0, 0),
-									new Point3D(-400, -400, 4500, 0, 0),
-									new Point3D(400, -400, 4500, 0, 0));
+	GeoBody testBody = new GeoBody(p1, p2, p3, p4, p5, p6, p7, p8);
+									
 	
-	Triangle3D testTriangle = new Triangle3D(p1, p2, p3);
+	Triangle3D t1 = new Triangle3D(p1, p2, p3, Color.BLUE);
+	Triangle3D t2 = new Triangle3D(p4, p2, p3, Color.PINK);
+	Triangle3D t3 = new Triangle3D(p3, p4, p8, Color.RED);
+	Triangle3D t4 = new Triangle3D(p1, p2, p5, Color.GREEN);
+	
 
 
 	public RenderPanel() {
@@ -56,7 +61,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		if (view != null) {
 			blacken(view);
 		}
-		r.rasterizeTriangles(mainCam, testTriangle);
+		r.rasterizeTriangles(mainCam, t1, t2, t3, t4);
 		view = Rasterizer.generateView(getWidth(), getHeight());
 	}
 	
@@ -65,13 +70,6 @@ public class RenderPanel extends JPanel implements Runnable{
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
-		
-		ScreenPoint[] screenTestPoint = testBody.getScreenPoints(mainCam);
-		
-		/*g2.setColor(Color.RED);
-		for(ScreenPoint s : screenTestPoint) {
-			g2.fillRect(s.getX(), s.getY(), 5, 5);
-		}*/
 		
 		g2.drawImage(view, null, 0, 0);
 	}
