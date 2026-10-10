@@ -3,7 +3,7 @@ package net.jules.core.camera;
 import java.awt.Dimension;
 
 import net.jules.core.scene.Point3D;
-import net.jules.graphics.Window;
+import net.jules.graphics.RenderPanel;
 
 public class Camera {
 	private float aspect;
@@ -76,7 +76,7 @@ public class Camera {
 	public ScreenPoint projectToScreenSpace(Point3D point) {
 		ClipSpacePoint c = projectToClipSpace(point);
 		NDCPoint n = c.toNDC();
-		ScreenPoint s = n.toScreenSpace(Window.DEFAULT_SIZE.width, Window.DEFAULT_SIZE.height);
+		ScreenPoint s = n.toScreenSpace(RenderPanel.DEFAULT_SIZE.width, RenderPanel.DEFAULT_SIZE.height);
 		 
 		return s;
 	}
