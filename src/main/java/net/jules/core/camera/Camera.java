@@ -73,10 +73,10 @@ public class Camera {
 		return new ClipSpacePoint(projectPointX(tp.getX()), projectPointY(tp.getY()), projectPointZ(tp.getZ()), projectPointW(tp.getZ()), tp.getU(), tp.getV());
 	}
 	
-	public ScreenPoint projectToScreenSpace(Point3D point) {
+	public ScreenPoint projectToScreenSpace(Point3D point, int width, int height) {
 		ClipSpacePoint c = projectToClipSpace(point);
 		NDCPoint n = c.toNDC();
-		ScreenPoint s = n.toScreenSpace(RenderPanel.DEFAULT_SIZE.width, RenderPanel.DEFAULT_SIZE.height);
+		ScreenPoint s = n.toScreenSpace(width, height);
 		 
 		return s;
 	}
@@ -98,4 +98,8 @@ public class Camera {
 		public Dimension getFrustumSize() {
 			return frustumSize;
 		}
+		
+	public void recalculateAspect(int width, int height) {
+		aspect = (float) width / (float) height;
+	}
 }	

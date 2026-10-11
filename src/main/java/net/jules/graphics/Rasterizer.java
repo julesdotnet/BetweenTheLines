@@ -9,6 +9,7 @@ import net.jules.core.camera.Camera;
 import net.jules.core.camera.ScreenPoint;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
+import net.jules.main.TinyLogger;
 
 public class Rasterizer {
 	class TriangleData {
@@ -40,12 +41,19 @@ public class Rasterizer {
 	private static ArrayList<TriangleData> triangleData = new ArrayList<>();
 	
 	public static BufferedImage generateView(int width, int height) {
-		BufferedImage view = new BufferedImage(RenderPanel.DEFAULT_SIZE.width, RenderPanel.DEFAULT_SIZE.height, BufferedImage.TYPE_INT_ARGB);
+		if(width <= 0 || height <= 0) {
+			TinyLogger.log("omitted");
+			return null;
+		}
+		
+		BufferedImage view = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		
+		TinyLogger.log("bi is null?: " + (view == null));
 		
 		for(TriangleData d : triangleData) {
 			//yes, i am ashamed of myself, but yes, it is what it is
-			if (d.getX() >= 0 && d.getX() < RenderPanel.DEFAULT_SIZE.width) {
-				if (d.getY() >= 0 && d.getY() < RenderPanel.DEFAULT_SIZE.height) {
+			if (d.getX() >= 0 && d.getX() < width) {
+				if (d.getY() >= 0 && d.getY() < height) {
 					view.setRGB(d.getX(), d.getY(), d.getValue());
 				}
 			}
@@ -55,12 +63,12 @@ public class Rasterizer {
 		return view;
 	}
 	
-	public void rasterizeTriangles(Camera c, Triangle3D... triangles) {
+	public void rasterizeTriangles(Camera c, int width, int height, Triangle3D... triangles) {
 		for(Triangle3D t : triangles) {
-			Rectangle boundingBox = getBoundingBox(t, c);
+			Rectangle boundingBox = getBoundingBox(t, c, width, height);
 			for(int y = boundingBox.y; y <= boundingBox.y + boundingBox.height; y++) {
-				for(int x = boundingBox.x; x <= boundingBox.x + boundingBox.height; x++) {
-					float[] bW = calculateBarycentricWeights(t, c, x, y);
+				for(int x = boundingBox.x; x <= boundingBox.x + boundingBox.width; x++) {
+					float[] bW = calculateBarycentricWeights(t, c, x, y, width, height);
 
 					
 					if(bW[0] < 0 || bW[1] < 0 || bW[2] < 0) {
@@ -75,7 +83,7 @@ public class Rasterizer {
 	}
 
 	
-	private float[] calculateBarycentricWeights(Triangle3D t, Camera cam, int px, int py) {
+	private float[] calculateBarycentricWeights(Triangle3D t, Camera cam, int px, int py, int width, int height) {
 		
 		float x = px + 0.5f;
 		float y = py + 0.5f;
@@ -84,9 +92,9 @@ public class Rasterizer {
 		
 		
 		//a bit pointless ik
-		ScreenPoint a = cam.projectToScreenSpace(points[0]);
-		ScreenPoint b = cam.projectToScreenSpace(points[1]);
-		ScreenPoint c = cam.projectToScreenSpace(points[2]);
+		ScreenPoint a = cam.projectToScreenSpace(points[0], width, height);
+		ScreenPoint b = cam.projectToScreenSpace(points[1], width, height);
+		ScreenPoint c = cam.projectToScreenSpace(points[2], width, height);
 		
 		//calc weights, d
 		float[] weights = new float[3];
@@ -111,13 +119,13 @@ public class Rasterizer {
 		return weights;
 	}
 	
-	private Rectangle getBoundingBox(Triangle3D t, Camera c) {
+	private Rectangle getBoundingBox(Triangle3D t, Camera c, int width, int height) {
 		Integer minX = null;
 		Integer maxX = null;
 		Integer minY = null;
 		Integer maxY = null;
 		//x boundaries
-		for(float x : t.getAllScreenX(c)) {
+		for(float x : t.getAllScreenX(c, width, height)) {
 			if(minX == null || x < minX) {
 				minX = (int)x;
 			}
@@ -127,7 +135,7 @@ public class Rasterizer {
 			}
 		}
 		//y boundaries
-		for(float y : t.getAllScreenY(c)) {
+		for(float y : t.getAllScreenY(c, width, height)) {
 			if(minY == null || y < minY) {
 				minY = (int)y;
 			}
@@ -137,6 +145,6 @@ public class Rasterizer {
 			}
 		}
 		
-		return new Rectangle(minX, minY, maxX, maxY);
+		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 }

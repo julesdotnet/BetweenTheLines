@@ -36,10 +36,10 @@ public class GeoBody {
 		return points.toArray(new Point3D[0]);
 	}
 	
-	public ScreenPoint[] getScreenPoints(Camera cam) {
+	public ScreenPoint[] getScreenPoints(Camera cam, int width, int height) {
 		ArrayList<ScreenPoint> sp = new ArrayList<>();
 		for(Point3D p : points) {
-			sp.add(cam.projectToScreenSpace(p));
+			sp.add(cam.projectToScreenSpace(p, width, height));
 		}
 		return sp.toArray(new ScreenPoint[0]);
 	}

@@ -1,15 +1,17 @@
 package net.jules.graphics;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
 import net.jules.core.camera.Camera;
-import net.jules.core.camera.ScreenPoint;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
+import net.jules.main.TinyLogger;
 
 public class RenderPanel extends JPanel implements Runnable{
 	
@@ -18,7 +20,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	Rasterizer r = new Rasterizer();
 	
-	BufferedImage view;
+	BufferedImage view = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 	
 	Camera mainCam = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
 	
@@ -52,17 +54,28 @@ public class RenderPanel extends JPanel implements Runnable{
 		
 		t.start();
 		
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				int width = getWidth();
+				int height = getHeight();
+				
+				if(width >= 0 && height >= 0) {
+					view = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				}
+			}
+		});
+		
 	}
 	
 	//update all sorts of game shi
 	public void update(float delta) {
 		testBody.move(30 * delta, delta, delta);
 		
-		if (view != null) {
-			blacken(view);
-		}
-		r.rasterizeTriangles(mainCam, t1, t2, t3, t4);
+		mainCam.recalculateAspect(getWidth(), getHeight());
+		r.rasterizeTriangles(mainCam, getWidth(), getHeight(), t1, t2, t3, t4);
 		view = Rasterizer.generateView(getWidth(), getHeight());
+		
 	}
 	
 	
@@ -72,6 +85,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		Graphics2D g2 = (Graphics2D) g;
 		
 		g2.drawImage(view, null, 0, 0);
+		
 	}
 	@Override
 	public void run() {
@@ -88,11 +102,4 @@ public class RenderPanel extends JPanel implements Runnable{
 	    }
 	}
 	
-	public void blacken(BufferedImage b) {
-		for(int y = 0; y < b.getHeight(); y++) {
-			for(int x = 0; x < b.getHeight(); x++) {
-				b.setRGB(x, y, Color.black.getRGB());
-			}
-		}
-	}
  }

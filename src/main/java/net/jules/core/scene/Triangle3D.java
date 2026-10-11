@@ -24,31 +24,31 @@ public class Triangle3D {
 		return points;
 	}
 	
-	public float[] getAllScreenX(Camera c) {
-		ScreenPoint[] screenPoints = getScreenPoints(c);
+	public float[] getAllScreenX(Camera c, int width, int height) {
+		ScreenPoint[] screenPoints = getScreenPoints(c, width, height);
 		return new float[] {screenPoints[0].getX(),
 				screenPoints[1].getX(),
 				screenPoints[2].getX()};
 	}
 	
-	public float[] getAllScreenY(Camera c) {
-		ScreenPoint[] screenPoints = getScreenPoints(c);
+	public float[] getAllScreenY(Camera c, int width, int height) {
+		ScreenPoint[] screenPoints = getScreenPoints(c, width, height);
 		return new float[] {screenPoints[0].getY(),
 				screenPoints[1].getY(),
 				screenPoints[2].getY()};
 	}
 	
-	public float[] getAllScreenZ(Camera c) {
-		ScreenPoint[] screenPoints = getScreenPoints(c);
+	public float[] getAllScreenZ(Camera c, int width, int height) {
+		ScreenPoint[] screenPoints = getScreenPoints(c, width, height);
 		return new float[] {screenPoints[0].getZ(),
 				screenPoints[1].getZ(),
 				screenPoints[2].getZ()};
 	}
 	
-	public ScreenPoint[] getScreenPoints(Camera cam) {
+	public ScreenPoint[] getScreenPoints(Camera cam, int width, int height) {
 		ArrayList<ScreenPoint> sp = new ArrayList<>();
 		for(Point3D p : points) {
-			sp.add(cam.projectToScreenSpace(p));
+			sp.add(cam.projectToScreenSpace(p, width, height));
 		}
 		return sp.toArray(new ScreenPoint[0]);
 	}
