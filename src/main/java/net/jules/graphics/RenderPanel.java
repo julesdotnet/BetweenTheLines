@@ -71,6 +71,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	//update all sorts of game shi
 	public void update(float delta) {
 		testBody.move(30 * delta, delta, delta);
+		testBody.rotateY(0.01f);
 		
 		mainCam.recalculateAspect(getWidth(), getHeight());
 		r.rasterizeTriangles(mainCam, getWidth(), getHeight(), t1, t2, t3, t4);
@@ -87,6 +88,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		g2.drawImage(view, null, 0, 0);
 		
 	}
+	
 	@Override
 	public void run() {
 	    long lastTime = System.currentTimeMillis();

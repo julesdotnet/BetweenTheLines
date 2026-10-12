@@ -42,10 +42,11 @@ public class NDCPoint {
 		return x >= -1 && x <= 1 && y >= -1 && y <= 1 && z >= -1 && z <= 1;
 	}
 
+	// NDCPoint.toScreenSpace
 	public ScreenPoint toScreenSpace(int screenWidth, int screenHeight) {
-		int screenX = (int) ((x + 1) * 0.5f * screenWidth);
-		int screenY = (int) ((1 - y) * 0.5f * screenHeight);
+		float screenX = (x + 1) * 0.5f * screenWidth;
+		float screenY = (1 - y) * 0.5f * screenHeight;
 
-		return new ScreenPoint(screenX, screenY, z, w,  getU(), getV());
+		return new ScreenPoint(screenX, screenY, z, w, getU(), getV());
 	}
 }

@@ -1,12 +1,12 @@
 package net.jules.core.camera;
 
 public class ScreenPoint {
-	private int x, y;
-	private float z;
-	private float w;
-	private short u, v;
+	private final float x, y;
+	private final float z;
+	private final float w;
+	private final short u, v;
 
-	public ScreenPoint(int x, int y, float z, float w, float u, float v) {
+	public ScreenPoint(float x, float y, float z, float w, float u, float v) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -15,22 +15,10 @@ public class ScreenPoint {
 		this.v = (short)(v * 65535);
 	}
 
-	public int getX() {
-		return x;
-	}
-	public int getY() {
-		return y;
-	}
-	public float getZ() {
-		return z;
-	}
-	public float getW() {
-		return w;
-	}
-	public float getU() {
-		return (u & 0xFFFF) / 65535.0f;
-	}
-	public float getV() {
-		return (v & 0xFFFF) / 65535.0f;
-	}
+	public float getX() { return x; }
+	public float getY() { return y; }
+	public float getZ() { return z; }
+	public float getW() { return w; }
+	public float getU() { return (u & 0xFFFF) / 65535.0f; }
+	public float getV() { return (v & 0xFFFF) / 65535.0f; }
 }
