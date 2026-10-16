@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import net.jules.core.camera.Camera;
+import net.jules.core.scene.FPSController;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
@@ -22,7 +23,9 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	BufferedImage view = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 	
-	Camera mainCam = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
+	//Camera mainCam = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
+	
+	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 0 ,0, this);
 	
 	Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
 	Point3D p2 = new Point3D(400, 400, 3000, 0, 0);
@@ -49,6 +52,9 @@ public class RenderPanel extends JPanel implements Runnable{
 		setVisible(true);
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
+		setFocusable(true);
+		addKeyListener(fpsc);
+		addMouseMotionListener(fpsc);
 		
 		Thread t = new Thread(this);
 		
@@ -70,11 +76,11 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	//update all sorts of game shi
 	public void update(float delta) {
-		testBody.move(30 * delta, delta, delta);
-		testBody.rotateY(0.01f);
-		
-		mainCam.recalculateAspect(getWidth(), getHeight());
-		r.rasterizeTriangles(mainCam, getWidth(), getHeight(), t1, t2, t3, t4);
+		//testBody.move(0 * delta, -300f * delta, 0 * delta);
+		//testBody.rotateY(0.1f * delta);
+		fpsc.update(delta);
+		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
+		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), t1, t2, t3, t4);
 		view = Rasterizer.generateView(getWidth(), getHeight());
 		
 	}
@@ -91,16 +97,53 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	@Override
 	public void run() {
-	    long lastTime = System.currentTimeMillis();
+	    long lastTime = System.nanoTime();
 
 	    while (true) {
-	        long currentTime = System.currentTimeMillis();
+	        long currentTime = System.nanoTime();
 
-	        float delta = (currentTime - lastTime) / 1000.0f;
+	        float delta = (currentTime - lastTime) / 1_000_000_000.0f;
 	        lastTime = currentTime;
 
 	        update(delta);
 	        repaint();
+	    }
+	}
+	
+	public void centerMouse() {
+	    try {
+	        Point center = new Point(
+	            getWidth() / 2,
+	            getHeight() / 2
+	        );
+
+	        SwingUtilities.convertPointToScreen(center, this);
+	        
+	        Robot robot = new Robot();
+	        robot.mouseMove(center.x, center.y);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void setCursorVisible(boolean visible) {
+	    if (visible) {
+	        setCursor(Cursor.getDefaultCursor());
+	    } else {
+	        Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+	        BufferedImage cursorImage = new BufferedImage(
+	            16, 16, BufferedImage.TYPE_INT_ARGB
+	        );
+
+	        Cursor invisibleCursor = toolkit.createCustomCursor(
+	            cursorImage,
+	            new Point(0, 0),
+	            "invisibleCursor"
+	        );
+
+	        setCursor(invisibleCursor);
 	    }
 	}
 	

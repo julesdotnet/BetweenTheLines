@@ -69,4 +69,129 @@ public class Point3D {
 		modY(y);
 		modZ(z);
 	}
+	
+	//rotation
+	private Point3D rotateYaw(float dY, Point3D pivot) {
+	    double angle = Math.toRadians(dY);
+
+	    double px = getX() - pivot.getX();
+	    double py = getY() - pivot.getY();
+	    double pz = getZ() - pivot.getZ();
+
+	    double cos = Math.cos(angle);
+	    double sin = Math.sin(angle);
+
+	    double x = px * cos + pz * sin;
+	    double z = -px * sin + pz * cos;
+
+	    return new Point3D(
+	        (float) (x + pivot.getX()),
+	        (float) (py + pivot.getY()),
+	        (float) (z + pivot.getZ()),
+	        u,
+	        v
+	        
+	    );
+	}
+	
+	private Point3D rotatePitch(float dP, Point3D pivot) {
+	    double angle = Math.toRadians(dP);
+
+	    double px = getX() - pivot.getX();
+	    double py = getY() - pivot.getY();
+	    double pz = getZ() - pivot.getZ();
+
+	    double cos = Math.cos(angle);
+	    double sin = Math.sin(angle);
+
+	    double y = py * cos - pz * sin;
+	    double z = py * sin + pz * cos;
+
+	    return new Point3D(
+	        (float) (px + pivot.getX()),
+	        (float) (y + pivot.getY()),
+	        (float) (z + pivot.getZ()),
+	        u,
+	        v
+	    );
+	}
+	
+	private Point3D rotateRoll(float dR, Point3D pivot) {
+	    double angle = Math.toRadians(dR);
+
+	    double px = getX() - pivot.getX();
+	    double py = getY() - pivot.getY();
+	    double pz = getZ() - pivot.getZ();
+
+	    double cos = Math.cos(angle);
+	    double sin = Math.sin(angle);
+
+	    double x = px * cos - py * sin;
+	    double y = px * sin + py * cos;
+
+	    return new Point3D(
+	        (float) (x + pivot.getX()),
+	        (float) (y + pivot.getY()),
+	        (float) (pz + pivot.getZ()),
+	        u,
+	        v
+	    );
+	}
+	//evil monolith of rotation
+	
+	/**
+	 * Rotates a point around a pivot
+	 * @param yaw
+	 * @param pitch
+	 * @param roll
+	 * @param pivot
+	 * @return
+	 */
+	public Point3D rotate(float yaw, float pitch, float roll, Point3D pivot) {
+
+	    double yAngle = Math.toRadians(yaw);
+	    double pAngle = Math.toRadians(pitch);
+	    double rAngle = Math.toRadians(roll);
+
+	    double x = getX() - pivot.getX();
+	    double y = getY() - pivot.getY();
+	    double z = getZ() - pivot.getZ();
+
+	    double cos = Math.cos(yAngle);
+	    double sin = Math.sin(yAngle);
+
+	    double x1 = x * cos + z * sin;
+	    double z1 = -x * sin + z * cos;
+
+	    x = x1;
+	    z = z1;
+
+	    cos = Math.cos(pAngle);
+	    sin = Math.sin(pAngle);
+
+	    double y1 = y * cos - z * sin;
+	    double z2 = y * sin + z * cos;
+
+	    y = y1;
+	    z = z2;
+
+	    cos = Math.cos(rAngle);
+	    sin = Math.sin(rAngle);
+
+	    double x2 = x * cos - y * sin;
+	    double y2 = x * sin + y * cos;
+
+	    x = x2;
+	    y = y2;
+
+	    return new Point3D(
+	        (float) (x + pivot.getX()),
+	        (float) (y + pivot.getY()),
+	        (float) (z + pivot.getZ()),
+	        u,
+	        v
+	    );
+	}
+	
+		
 }
