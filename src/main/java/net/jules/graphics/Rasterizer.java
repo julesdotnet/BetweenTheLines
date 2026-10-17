@@ -34,7 +34,7 @@ public class Rasterizer {
 		public int getY() { return y; }
 		public float getDepth() { return depth; }
 		public int getValue() { return value; }
-		public boolean getTextRenderingEnabled() { return textRendering; }
+		public boolean isTextRenderingEnabled() { return textRendering; }
 	}
 
 	private static final ArrayList<TriangleData> triangleData = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Rasterizer {
 
 			int idx = width * y + x;
 			if (d.getDepth() > depthMap[idx]) {
-				if(d.getTextRenderingEnabled()) {
+				if(d.isTextRenderingEnabled()) {
 					paintText("wall", x, y, view, new Color(d.getValue()));
 				} else {
 					view.setRGB(x, y, d.getValue());
