@@ -137,14 +137,14 @@ public class Camera {
 	 * @param dY
 	 */
 	public void modYaw(float dY) {
-		yaw *= dY;
+		yaw += dY;
 	}
 	/**
 	 * modifies pitch (currentpitch += dP)
 	 * @param dP
 	 */
 	public void modPitch(float dP) {
-		pitch *= dP;
+		pitch += dP;
 	}
 	
 	/**
@@ -152,7 +152,7 @@ public class Camera {
 	 * @param dR
 	 */
 	public void modRoll(float dR) {
-		roll *= dR;
+		roll += dR;
 	}
 	
 	//moving

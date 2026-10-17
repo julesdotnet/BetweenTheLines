@@ -21,7 +21,7 @@ public class FPSController implements KeyListener, MouseMotionListener {
 	Camera camera;
 	
 	public FPSController(Point3D position, float yaw, float pitch, RenderPanel rp) {
-		camera = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
+		camera = new Camera(1, 10, (float) 1f, RenderPanel.DEFAULT_SIZE);
 		camera.move(position.getX(), position.getY(), position.getZ());
 		camera.setYaw(yaw);
 		camera.setPitch(pitch);
@@ -33,19 +33,19 @@ public class FPSController implements KeyListener, MouseMotionListener {
 	public void update(float delta) {
 		switch(getDirection()) {
 		case "FORWARD":
-			camera.move(0, 0, 200f * delta);
+			camera.move(0, 0, 220f * delta);
 			break;
 			
 		case "BACKWARD":
-			camera.move(0, 0, -200f * delta);
+			camera.move(0, 0, -220f * delta);
 			break;
 		
 		case "LEFT":
-			camera.move(-200f * delta, 0, 0);
+			camera.move(-220f * delta, 0, 0);
 			break;	
 		
 		case "RIGHT":
-			camera.move(200f * delta, 0, 0);
+			camera.move(220f * delta, 0, 0);
 			break;
 			
 		case "FORWARD_LEFT":

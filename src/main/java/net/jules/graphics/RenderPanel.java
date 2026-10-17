@@ -7,12 +7,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
-import net.jules.core.camera.Camera;
 import net.jules.core.scene.FPSController;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
-import net.jules.main.TinyLogger;
 
 public class RenderPanel extends JPanel implements Runnable{
 	
@@ -25,7 +23,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	//Camera mainCam = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
 	
-	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 0 ,0, this);
+	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 20 ,0, this);
 	
 	Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
 	Point3D p2 = new Point3D(400, 400, 3000, 0, 0);
@@ -77,7 +75,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	//update all sorts of game shi
 	public void update(float delta) {
 		//testBody.move(0 * delta, -300f * delta, 0 * delta);
-		//testBody.rotateY(0.1f * delta);
+		testBody.rotateY(0.4f * delta);
 		fpsc.update(delta);
 		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
 		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), t1, t2, t3, t4);

@@ -1,5 +1,10 @@
 package net.jules.graphics;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -13,20 +18,23 @@ public class Rasterizer {
 	private static class TriangleData {
 		private final int x;
 		private final int y;
-		private final float depth; // 1/w: bigger = closer
+		private final float depth;
 		private final int value;
+		private boolean textRendering;
 
-		public TriangleData(int x, int y, float depth, int value) {
+		public TriangleData(int x, int y, float depth, int value, boolean textRendering) {
 			this.x = x;
 			this.y = y;
 			this.depth = depth;
 			this.value = value;
+			this.textRendering = textRendering;
 		}
 
 		public int getX() { return x; }
 		public int getY() { return y; }
 		public float getDepth() { return depth; }
 		public int getValue() { return value; }
+		public boolean getTextRenderingEnabled() { return textRendering; }
 	}
 
 	private static final ArrayList<TriangleData> triangleData = new ArrayList<>();
@@ -38,7 +46,7 @@ public class Rasterizer {
 		}
 
 		BufferedImage view = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		float[] depthMap = new float[width * height]; // 0 = infinitely far
+		float[] depthMap = new float[width * height];
 
 		for (TriangleData d : triangleData) {
 			int x = d.getX();
@@ -49,7 +57,11 @@ public class Rasterizer {
 
 			int idx = width * y + x;
 			if (d.getDepth() > depthMap[idx]) {
-				view.setRGB(x, y, d.getValue());
+				if(d.getTextRenderingEnabled()) {
+					paintText("wall", x, y, view, new Color(d.getValue()));
+				} else {
+					view.setRGB(x, y, d.getValue());
+				}
 				depthMap[idx] = d.getDepth();
 			}
 		}
@@ -108,9 +120,41 @@ public class Rasterizer {
 					}
 
 					float depth = invW0 * l0 + invW1 * l1 + invW2 * l2;
-					triangleData.add(new TriangleData(x, y, depth, rgb));
+					triangleData.add(new TriangleData(x, y, depth, rgb, true));
 				}
 			}
 		}
+	}
+	
+	/**
+	 * prepares and paints text on a specific place on a bufferedimg
+	 * @param text (e. g. wall, grass)
+	 * @param x (x-loc)
+	 * @param y (y-loc)
+	 * @param b (bufferedimg to paint on)
+	 * @param c (color of text, e. g. Color.RED)
+	 */
+	private static void paintText(String text, int x, int y, BufferedImage b, Color c) {
+		
+		Graphics2D g = (Graphics2D) b.getGraphics();
+		FontMetrics fm = g.getFontMetrics();
+	
+		int xOffset =  (int) (fm.stringWidth(text) / 2);
+		int yOffset = (int) (fm.getHeight() / 2);
+		
+		if((x % (int) (xOffset * 2.2f)) != 0) {
+			return;
+		}
+		if((y % yOffset) != 0) {
+			return;
+		}
+	
+		
+		g.setFont(new Font("Arial", Font.PLAIN, 10));
+		g.setColor(c);
+		
+		g.drawString(text, x - xOffset, y - yOffset);
+		
+		
 	}
 }
