@@ -2,7 +2,7 @@ package net.jules.core.content.weapon;
 
 import net.jules.core.scene.GeoBody;
 
-public abstract sealed class Weapon permits RangedWeapon, MeleeWeapon {
+public sealed abstract class Weapon permits RangedWeapon, MeleeWeapon {
 	
 	protected String displayName;
 	protected int damage;

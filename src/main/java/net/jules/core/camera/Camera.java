@@ -28,7 +28,7 @@ public class Camera {
 	 */
 	public Camera(float near, float far, float fov, Dimension frustumSize) {
 		if(frustumSize != null) {
-			this.aspect = frustumSize.width / frustumSize.height;
+			this.aspect = frustumSize.width / (float) frustumSize.height;
 		} else {
 			this.aspect = 1;
 		}
@@ -113,8 +113,8 @@ public class Camera {
 	    Point3D origin = new Point3D(0, 0, 0, 0, 0);
 
 	    Point3D rotated = relative.rotate(
-	        yaw, pitch, roll, origin
-	    );
+	    	    -yaw, -pitch, -roll, origin
+	    	);
 
 	    /*System.out.println("Yaw: " + yaw);
 	    System.out.println("Before rotation: " + relative.getX());
@@ -160,6 +160,10 @@ public class Camera {
 		pos.setX(pos.getX() + x);
 		pos.setY(pos.getY() + y);
 		pos.setZ(pos.getZ() + z);
+	}
+	
+	public void setPosition(Point3D newPos) {
+		pos = newPos;
 	}
 	
 	

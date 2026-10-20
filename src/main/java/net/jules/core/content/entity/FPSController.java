@@ -1,29 +1,39 @@
-package net.jules.core.scene;
+package net.jules.core.content.entity;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.jules.core.camera.Camera;
+import net.jules.core.content.weapon.Scar;
+import net.jules.core.content.weapon.Weapon;
+import net.jules.core.scene.Point3D;
 import net.jules.graphics.RenderPanel;
+import net.jules.main.TinyLogger;
 
-public class FPSController implements KeyListener, MouseMotionListener {
+public class FPSController extends Entity implements KeyListener, MouseMotionListener, MouseListener {
 
 	private static final float MOVE_SPEED = 220f;
 	private static final float MOUSE_SENSITIVITY = 0.1f;
-
+	
+	//used by several threads
 	private final Set<Integer> keysPressed = ConcurrentHashMap.newKeySet();
 	private volatile boolean mouseLocked = false;
 
 	private final RenderPanel rp;
 	private final Camera camera;
+	
+	//game related stuff
+	Scar scar = new Scar(this);
 
 	public FPSController(Point3D position, float yaw, float pitch, RenderPanel rp) {
+		super(position, yaw, pitch);
 		camera = new Camera(1, 10, 1f, RenderPanel.DEFAULT_SIZE);
-		camera.move(position.getX(), position.getY(), position.getZ());
+		camera.setPosition(position);
 		camera.setYaw(yaw);
 		camera.setPitch(pitch);
 		camera.setRoll(0);
@@ -32,9 +42,15 @@ public class FPSController implements KeyListener, MouseMotionListener {
 	}
 
 	public void update(float delta) {
+		handleMovement(delta);
+		
+		scar.update();
+	}
+	
+	private void handleMovement(float delta) {
 		float forwardInput = 0f;
 		float rightInput = 0f;
-
+		
 		if (keysPressed.contains(KeyEvent.VK_W)) forwardInput += 1f;
 		if (keysPressed.contains(KeyEvent.VK_S)) forwardInput -= 1f;
 		if (keysPressed.contains(KeyEvent.VK_D)) rightInput += 1f;
@@ -55,7 +71,9 @@ public class FPSController implements KeyListener, MouseMotionListener {
 		float dz = forwardInput * cos - rightInput * sin;
 
 		float step = MOVE_SPEED * delta;
-		camera.move(dx * step, 0, dz * step);
+		position.modX(dx * step);
+		position.modY(0);
+		position.modZ(dz * step);
 	}
 
 	@Override
@@ -71,8 +89,8 @@ public class FPSController implements KeyListener, MouseMotionListener {
 		int mY = e.getY() - rp.getHeight() / 2;
 
 		rp.centerMouse();
-		camera.modYaw(mX * MOUSE_SENSITIVITY);
-		camera.modPitch(mY * MOUSE_SENSITIVITY);
+		camera.modYaw(-mX * MOUSE_SENSITIVITY);
+		camera.modPitch(-mY * MOUSE_SENSITIVITY);
 	}
 
 	@Override
@@ -98,5 +116,39 @@ public class FPSController implements KeyListener, MouseMotionListener {
 
 	public Camera getCamera() {
 		return camera;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			scar.onLeftClick();
+		} else if(e.getButton() == MouseEvent.BUTTON3) {
+			scar.onRightClick();
+		}
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

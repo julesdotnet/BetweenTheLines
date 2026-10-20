@@ -1,9 +1,9 @@
 package net.jules.core.scene;
 
 public class Vector3D {
-    public double x, y, z;
+    private float x, y, z;
 
-    public Vector3D(double x, double y, double z) {
+    public Vector3D(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -18,14 +18,26 @@ public class Vector3D {
     }
 
     public Vector3D normalize() {
-        double length = Math.sqrt(x*x + y*y + z*z);
+        float length = (float) Math.sqrt(x*x + y*y + z*z);
 
         if (length == 0) return new Vector3D(0, 0, 0);
 
         return new Vector3D(x / length, y / length, z / length);
     }
 
-    public Vector3D multiply(double scalar) {
+    public Vector3D multiply(float scalar) {
         return new Vector3D(x * scalar, y * scalar, z * scalar);
+    }
+    
+    public float getX() {
+    	return x;
+    }
+    
+    public float getY() {
+    	return y;
+    }
+    
+    public float getZ() {
+    	return z;
     }
 }

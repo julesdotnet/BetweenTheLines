@@ -7,11 +7,13 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import net.jules.core.camera.ScreenPoint;
+import net.jules.core.content.entity.FPSController;
 import net.jules.core.content.weapon.BulletUpdater;
-import net.jules.core.scene.FPSController;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
+import net.jules.main.TinyLogger;
 
 public class RenderPanel extends JPanel implements Runnable{
 	
@@ -54,6 +56,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		setFocusable(true);
 		addKeyListener(fpsc);
 		addMouseMotionListener(fpsc);
+		addMouseListener(fpsc);
 		
 		Thread t = new Thread(this);
 		
@@ -76,7 +79,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	//update all sorts of game shi
 	public void update(float delta) {
 		//testBody.move(0 * delta, -300f * delta, 0 * delta);
-		testBody.rotateY(0.4f * delta);
+		//testBody.rotateY(0.4f * delta);
 		
 		BulletUpdater.getInstance().update(delta);
 		
@@ -94,6 +97,15 @@ public class RenderPanel extends JPanel implements Runnable{
 		Graphics2D g2 = (Graphics2D) g;
 		
 		g2.drawImage(view, null, 0, 0);
+		
+		ScreenPoint[] pts = BulletUpdater.getInstance().getAllBulletScreenPoints(fpsc.getCamera(), this);
+		
+		TinyLogger.log("pts len: " + pts.length);
+		
+		for(ScreenPoint p : pts) {
+			g2.setColor(Color.WHITE);
+			g2.fillRect((int) (p.getX() - 10), (int) (p.getY() - 10), 20, 20);
+		}
 		
 	}
 	

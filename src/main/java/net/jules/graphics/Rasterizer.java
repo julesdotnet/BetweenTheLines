@@ -41,7 +41,6 @@ public class Rasterizer {
 
 	public static BufferedImage generateView(int width, int height) {
 		if (width <= 0 || height <= 0) {
-			TinyLogger.log("omitted");
 			return null;
 		}
 
@@ -78,7 +77,6 @@ public class Rasterizer {
 			ScreenPoint b = cam.projectToScreenSpace(pts[1], width, height);
 			ScreenPoint c = cam.projectToScreenSpace(pts[2], width, height);
 
-			// clip-space w from the projection, NOT Point3D.getW() (always 1)
 			float w0 = a.getW();
 			float w1 = b.getW();
 			float w2 = c.getW();
