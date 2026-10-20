@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import net.jules.core.content.weapon.BulletUpdater;
 import net.jules.core.scene.FPSController;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
@@ -76,6 +77,9 @@ public class RenderPanel extends JPanel implements Runnable{
 	public void update(float delta) {
 		//testBody.move(0 * delta, -300f * delta, 0 * delta);
 		testBody.rotateY(0.4f * delta);
+		
+		BulletUpdater.getInstance().update(delta);
+		
 		fpsc.update(delta);
 		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
 		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), t1, t2, t3, t4);

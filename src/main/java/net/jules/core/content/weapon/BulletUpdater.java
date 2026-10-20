@@ -15,7 +15,7 @@ public class BulletUpdater {
 		
 	}
 	
-	public void update() {
+	public void update(float delta) {
 		
 	}
 	

@@ -4,160 +4,99 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.jules.core.camera.Camera;
 import net.jules.graphics.RenderPanel;
-import net.jules.main.TinyLogger;
 
 public class FPSController implements KeyListener, MouseMotionListener {
-	
-	private final Set<Integer> keysPressed = new HashSet<>();
-	private boolean mouseLocked = false;
-	
-	private RenderPanel rp;
-	
-	Camera camera;
-	
+
+	private static final float MOVE_SPEED = 220f;
+	private static final float MOUSE_SENSITIVITY = 0.1f;
+
+	private final Set<Integer> keysPressed = ConcurrentHashMap.newKeySet();
+	private volatile boolean mouseLocked = false;
+
+	private final RenderPanel rp;
+	private final Camera camera;
+
 	public FPSController(Point3D position, float yaw, float pitch, RenderPanel rp) {
-		camera = new Camera(1, 10, (float) 1f, RenderPanel.DEFAULT_SIZE);
+		camera = new Camera(1, 10, 1f, RenderPanel.DEFAULT_SIZE);
 		camera.move(position.getX(), position.getY(), position.getZ());
 		camera.setYaw(yaw);
 		camera.setPitch(pitch);
 		camera.setRoll(0);
-		
+
 		this.rp = rp;
 	}
-	
+
 	public void update(float delta) {
-		switch(getDirection()) {
-		case "FORWARD":
-			camera.move(0, 0, 220f * delta);
-			break;
-			
-		case "BACKWARD":
-			camera.move(0, 0, -220f * delta);
-			break;
-		
-		case "LEFT":
-			camera.move(-220f * delta, 0, 0);
-			break;	
-		
-		case "RIGHT":
-			camera.move(220f * delta, 0, 0);
-			break;
-			
-		case "FORWARD_LEFT":
-			camera.move(0, 0, 200f * delta);
-			break;
-			
-		case "BACKWARD_LEFT":
-			camera.move(0, 0, -200f * delta);
-			break;
-		
-		case "FORWARD_RIGHT":
-			camera.move(-200f * delta, 0, 0);
-			break;	
-		
-		case "BACKWARD_RIGHT":
-			camera.move(200f * delta, 0, 0);
-			break;	
-		
-		} 
+		float forwardInput = 0f;
+		float rightInput = 0f;
+
+		if (keysPressed.contains(KeyEvent.VK_W)) forwardInput += 1f;
+		if (keysPressed.contains(KeyEvent.VK_S)) forwardInput -= 1f;
+		if (keysPressed.contains(KeyEvent.VK_D)) rightInput += 1f;
+		if (keysPressed.contains(KeyEvent.VK_A)) rightInput -= 1f;
+
+		if (forwardInput == 0f && rightInput == 0f) return;
+
+		//norm
+		float len = (float) Math.sqrt(forwardInput * forwardInput + rightInput * rightInput);
+		forwardInput /= len;
+		rightInput /= len;
+
+		float yawRad = (float) Math.toRadians(camera.getYaw());
+		float sin = (float) Math.sin(yawRad);
+		float cos = (float) Math.cos(yawRad);
+
+		float dx = forwardInput * sin + rightInput * cos;
+		float dz = forwardInput * cos - rightInput * sin;
+
+		float step = MOVE_SPEED * delta;
+		camera.move(dx * step, 0, dz * step);
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
-		
+	public void mouseDragged(MouseEvent e) {
+		mouseMoved(e);
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		int mX = arg0.getX() - rp.getWidth() / 2;
-		int mY = arg0.getY() - rp.getHeight() / 2;
-		
-		if(mouseLocked) {
-			rp.centerMouse();
-			camera.modYaw(mX * 0.1f);
-			TinyLogger.log("mX?: " + mX);
-			camera.modPitch(mY * 0.1f);
-		
-		}
+	public void mouseMoved(MouseEvent e) {
+		if (!mouseLocked) return;
+
+		int mX = e.getX() - rp.getWidth() / 2;
+		int mY = e.getY() - rp.getHeight() / 2;
+
+		rp.centerMouse();
+		camera.modYaw(mX * MOUSE_SENSITIVITY);
+		camera.modPitch(mY * MOUSE_SENSITIVITY);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int kc = e.getExtendedKeyCode();
-		
-		if(kc == KeyEvent.VK_ESCAPE) {
+
+		if (kc == KeyEvent.VK_ESCAPE) {
 			mouseLocked = !mouseLocked;
 			rp.setCursorVisible(!mouseLocked);
 		} else {
 			keysPressed.add(kc);
 		}
-		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		int kc = e.getExtendedKeyCode();
-		
-		keysPressed.remove(kc);
-		
+		keysPressed.remove(e.getExtendedKeyCode());
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
-	
-	/**
-	 * builds a direction based off the set of all the WASD-keys pressed <br>
-	 * 
-	 * FORMAT: "FORWARD/BACKWARD_LEFT/RIGHT" <br>
-	 * 
-	 * if movement is one-dimensional, there will be no underscore and only one word e.g. "LEFT" <br>
-	 * 
-	 * if there is no movement, output will be "NONE" <br>
-	 * 
-	 * @return string direction
-	 */
-	public String getDirection() {
-		StringBuilder direction = new StringBuilder();
-		//underscore applied?
-		boolean ua = false;
-		
-		if(keysPressed.contains(KeyEvent.VK_W) && !keysPressed.contains(KeyEvent.VK_S))  {
-			direction.append("FORWARD");
-		} else if (keysPressed.contains(KeyEvent.VK_S)) {
-			direction.append("BACKWARD");
-		}
-		
-		if(direction.length() > 0) {
-			direction.append("_");
-			ua = true;
-		}
-		
-		if(keysPressed.contains(KeyEvent.VK_A) && !keysPressed.contains(KeyEvent.VK_D))  {
-			direction.append("LEFT");
-		} else if (keysPressed.contains(KeyEvent.VK_D)) {
-			direction.append("RIGHT");
-		} else if (ua){
-			direction.deleteCharAt(direction.indexOf("_"));
-		}
-		
-		if(direction.length() == 0) {
-			direction.append("NONE");
-		}
-		
-		return direction.toString();
-	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
-	
-
 }
