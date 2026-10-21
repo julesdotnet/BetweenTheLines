@@ -26,6 +26,14 @@ public abstract class Entity {
 		return pitch;
 	}
 	
+	public void modYaw(float mod) {
+		yaw += mod;
+	}
+	
+	public void modPitch(float mod) {
+		pitch += mod;
+	}
+	
 	public void move(float x, float z) {
 		position.modX(x);
 		position.modZ(z);

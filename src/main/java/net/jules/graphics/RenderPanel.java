@@ -99,8 +99,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		g2.drawImage(view, null, 0, 0);
 		
 		ScreenPoint[] pts = BulletUpdater.getInstance().getAllBulletScreenPoints(fpsc.getCamera(), this);
-		
-		TinyLogger.log("pts len: " + pts.length);
+
 		
 		for(ScreenPoint p : pts) {
 			g2.setColor(Color.WHITE);

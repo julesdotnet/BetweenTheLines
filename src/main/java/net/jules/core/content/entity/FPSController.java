@@ -89,8 +89,15 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 		int mY = e.getY() - rp.getHeight() / 2;
 
 		rp.centerMouse();
-		camera.modYaw(-mX * MOUSE_SENSITIVITY);
-		camera.modPitch(-mY * MOUSE_SENSITIVITY);
+		//camera.modYaw(-mX * MOUSE_SENSITIVITY);
+		//camera.modPitch(-mY * MOUSE_SENSITIVITY);
+		
+		modYaw(-mX * MOUSE_SENSITIVITY);
+		modPitch(-mY * MOUSE_SENSITIVITY);
+		
+		camera.setYaw(getYaw());
+		camera.setPitch(getPitch());
+		
 	}
 
 	@Override
