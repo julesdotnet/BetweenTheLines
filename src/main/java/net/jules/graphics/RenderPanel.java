@@ -10,10 +10,8 @@ import javax.swing.*;
 import net.jules.core.camera.ScreenPoint;
 import net.jules.core.content.entity.FPSController;
 import net.jules.core.content.weapon.BulletUpdater;
-import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.SceneHandler;
-import net.jules.core.scene.Triangle3D;
 
 public class RenderPanel extends JPanel implements Runnable{
 	
@@ -23,8 +21,6 @@ public class RenderPanel extends JPanel implements Runnable{
 	Rasterizer r = new Rasterizer();
 	
 	BufferedImage view = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
-	
-	//Camera mainCam = new Camera(1, 10, (float) 0.8, RenderPanel.DEFAULT_SIZE);
 	
 	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 20 ,0, this);
 	
@@ -88,6 +84,9 @@ public class RenderPanel extends JPanel implements Runnable{
 		fpsc.update(delta);
 		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
 		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), SceneHandler.getCurrentScene().getRenderEligibleTriangles());
+		
+		HUDPanel.getInstance().addDebugText("current triangles: " + SceneHandler.getCurrentScene().getRenderEligibleTriangles().length, 10, 20);
+		
 		view = Rasterizer.generateView(getWidth(), getHeight());
 		
 	}
@@ -107,7 +106,12 @@ public class RenderPanel extends JPanel implements Runnable{
 			g2.setColor(Color.WHITE);
 			g2.fillRect((int) (p.getX() - 10), (int) (p.getY() - 10), 20, 20);
 		}
+		HUDPanel.getInstance().drawHUD(g2);
 		
+		//sloppy crosshair
+		g2.setColor(Color.CYAN);
+		g2.fillRect(getWidth() / 2 - 15, getHeight() / 2 - 2, 30, 4);
+		g2.fillRect(getWidth() / 2 - 2, getHeight() / 2 - 15, 4, 30);
 	}
 	
 	@Override

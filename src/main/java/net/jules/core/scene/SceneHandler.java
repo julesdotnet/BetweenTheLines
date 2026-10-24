@@ -17,18 +17,17 @@ public class SceneHandler {
 	Scene mainScene = new Scene(MAIN_SCENE) {
 		@Override
 		void update() {
-			try {
-				this.buildScene(SceneParser.parseSceneFromFile("btlscenes/scene1.btlscene"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			
 		}
 	};
 	
 	public SceneHandler(RenderPanel rp) {
-		
+		try {
+			mainScene.buildScene(SceneParser.parseSceneFromFile("/btlscenes/map1.btlscene"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		TinyLogger.log("Existing scenes at launch: " + sceneList.size());
 	}
 	

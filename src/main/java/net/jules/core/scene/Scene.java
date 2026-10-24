@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class Scene {
 
 	private final int sceneID;
-	private final List<? super GeoBody> sceneObjects = new ArrayList<>();
+	private final List<GeoBody> sceneObjects = new ArrayList<>();
 
 	public Scene(int sceneID) {
 		this.sceneID = sceneID;
@@ -34,17 +34,13 @@ public abstract class Scene {
 	}
 	
 	public Triangle3D[] getRenderEligibleTriangles() {
-		ArrayList<Triangle3D> returnList = new ArrayList<>();
-		
-		for(Object o : sceneObjects) {
-			GeoBody g = (GeoBody) o;
-			
-			for(Triangle3D t : g.getTriangles()) {
-				returnList.add(t);
+		ArrayList<Triangle3D> result = new ArrayList<>();
+		for (GeoBody g : sceneObjects) {
+			for (Triangle3D t : g.getTriangles()) {
+				result.add(t);
 			}
-			
 		}
-		return returnList.toArray(new Triangle3D[0]);
+		return result.toArray(new Triangle3D[0]);
 	}
 	
 	

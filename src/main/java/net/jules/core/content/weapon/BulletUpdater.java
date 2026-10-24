@@ -1,6 +1,8 @@
 package net.jules.core.content.weapon;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import net.jules.core.camera.Camera;
 import net.jules.core.camera.ScreenPoint;
@@ -13,17 +15,19 @@ public class BulletUpdater {
 	
 	private static BulletUpdater INSTANCE = new BulletUpdater();
 	
-	private ArrayList<Bullet> bulletList = new ArrayList<>();
+	private List<Bullet> bulletList = Collections.synchronizedList(new ArrayList<>());
 	
 	private BulletUpdater() {
 		
 	}
 	
 	public void update(float delta) {
-		for(Bullet b : bulletList) {
-			b.modCurrentPosition(delta);
-			
-			//if(b.rayIntersectsTriangle());
+		synchronized(bulletList) {
+			for(Bullet b : bulletList) {
+				b.modCurrentPosition(delta);
+				
+				//if(b.rayIntersectsTriangle());
+			}
 		}
 	}
 	

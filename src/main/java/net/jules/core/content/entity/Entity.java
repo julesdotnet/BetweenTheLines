@@ -7,6 +7,7 @@ public abstract class Entity {
 	
 	private float yaw;
 	private float pitch;
+	private boolean doClamp = true;
 	
 	public Entity(Point3D pos, float yaw, float pitch) {
 		this.position = pos;
@@ -32,10 +33,25 @@ public abstract class Entity {
 	
 	public void modPitch(float mod) {
 		pitch += mod;
+		clamp(doClamp);
 	}
 	
 	public void move(float x, float z) {
 		position.modX(x);
 		position.modZ(z);
 	}
+	
+	private void clamp(boolean doClamp) {
+		
+		if(!doClamp) {
+			return;
+		}
+		
+		if(pitch < -90) {
+			pitch = -90f;
+		}
+		if(pitch > 90) {
+			pitch = 90;
+		}
+ 	}
 }

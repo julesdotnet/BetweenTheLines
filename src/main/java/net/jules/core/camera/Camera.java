@@ -11,6 +11,8 @@ public class Camera {
 	private float fov;
 	private Dimension frustumSize;
 	
+	private boolean doClamp = true;
+	
 	private float yaw = -30f;
 	private float pitch = 10f;
 	private float roll = 0f;
@@ -145,6 +147,7 @@ public class Camera {
 	 */
 	public void modPitch(float dP) {
 		pitch += dP;
+		clamp(doClamp);
 	}
 	
 	/**
@@ -165,6 +168,24 @@ public class Camera {
 	public void setPosition(Point3D newPos) {
 		pos = newPos;
 	}
+	
+	/**
+	 * Ensures the camera's pitch is strictly between 90° and -90°
+	 * @param doClamp
+	 */
+	private void clamp(boolean doClamp) {
+		
+		if(!doClamp) {
+			return;
+		}
+		
+		if(pitch < -90) {
+			pitch = -90f;
+		}
+		if(pitch > 90) {
+			pitch = 90;
+		}
+ 	}
 	
 	
 	//getters/setters
@@ -200,6 +221,7 @@ public class Camera {
 		}
 		public void setPitch(float p) {
 			pitch = p;
+			clamp(doClamp);
 		}
 		public float getX( ) {
 			return pos.getX();
