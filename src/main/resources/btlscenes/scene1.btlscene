@@ -1,0 +1,4 @@
+BTLSCENEVERSION=1
+AUTHOR=julesdotnet
+
+GEOBODY->PLANE->(V[0,0,0],[0,0,400],[400,0,0],[400,0,400])->(T[0,1,2],[1,2,3]); 

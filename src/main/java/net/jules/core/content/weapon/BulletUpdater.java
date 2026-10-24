@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.jules.core.camera.Camera;
 import net.jules.core.camera.ScreenPoint;
 import net.jules.graphics.RenderPanel;
-import net.jules.main.TinyLogger;
 
 /**
  * Handles per-frame behavior for all bullets
@@ -23,6 +22,8 @@ public class BulletUpdater {
 	public void update(float delta) {
 		for(Bullet b : bulletList) {
 			b.modCurrentPosition(delta);
+			
+			//if(b.rayIntersectsTriangle());
 		}
 	}
 	

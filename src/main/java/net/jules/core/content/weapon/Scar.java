@@ -1,7 +1,6 @@
 package net.jules.core.content.weapon;
 
 import java.awt.Color;
-import java.util.logging.Logger;
 
 import net.jules.core.content.entity.Entity;
 import net.jules.core.content.weapon.Bullet.BulletFactory;

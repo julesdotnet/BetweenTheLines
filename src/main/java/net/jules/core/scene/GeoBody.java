@@ -95,6 +95,10 @@ public class GeoBody {
 		return points.toArray(new Point3D[0]);
 	}
 	
+	public Triangle3D[] getTriangles() {
+		return triangles.toArray(new Triangle3D[0]);
+	}
+	
 	public ScreenPoint[] getScreenPoints(Camera cam, int width, int height) {
 		ArrayList<ScreenPoint> sp = new ArrayList<>();
 		for(Point3D p : points) {

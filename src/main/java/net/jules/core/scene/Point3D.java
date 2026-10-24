@@ -137,6 +137,15 @@ public class Point3D {
 	        v
 	    );
 	}
+	
+	public Vector3D subtract(Point3D other) {
+	    return new Vector3D(
+	        x - other.x,
+	        y - other.y,
+	        z - other.z
+	    );
+	}
+	
 	//evil monolith of rotation
 	
 	/**

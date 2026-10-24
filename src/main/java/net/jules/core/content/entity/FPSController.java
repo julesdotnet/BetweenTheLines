@@ -10,10 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.jules.core.camera.Camera;
 import net.jules.core.content.weapon.Scar;
-import net.jules.core.content.weapon.Weapon;
 import net.jules.core.scene.Point3D;
 import net.jules.graphics.RenderPanel;
-import net.jules.main.TinyLogger;
 
 public class FPSController extends Entity implements KeyListener, MouseMotionListener, MouseListener {
 

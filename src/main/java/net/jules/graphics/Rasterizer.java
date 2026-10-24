@@ -3,7 +3,6 @@ package net.jules.graphics;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import net.jules.core.camera.Camera;
 import net.jules.core.camera.ScreenPoint;
 import net.jules.core.scene.Point3D;
 import net.jules.core.scene.Triangle3D;
-import net.jules.main.TinyLogger;
 
 public class Rasterizer {
 	private static class TriangleData {

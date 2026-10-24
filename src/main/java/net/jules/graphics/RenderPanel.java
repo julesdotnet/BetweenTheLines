@@ -12,8 +12,8 @@ import net.jules.core.content.entity.FPSController;
 import net.jules.core.content.weapon.BulletUpdater;
 import net.jules.core.scene.GeoBody;
 import net.jules.core.scene.Point3D;
+import net.jules.core.scene.SceneHandler;
 import net.jules.core.scene.Triangle3D;
-import net.jules.main.TinyLogger;
 
 public class RenderPanel extends JPanel implements Runnable{
 	
@@ -28,7 +28,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 20 ,0, this);
 	
-	Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
+	/*Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
 	Point3D p2 = new Point3D(400, 400, 3000, 0, 0);
 	Point3D p3 = new Point3D(-400, 400, 4500, 0, 0);
 	Point3D p4 = new Point3D(400, 400, 4500, 0, 0);
@@ -43,7 +43,9 @@ public class RenderPanel extends JPanel implements Runnable{
 	Triangle3D t1 = new Triangle3D(p1, p2, p3, Color.BLUE);
 	Triangle3D t2 = new Triangle3D(p4, p2, p3, Color.PINK);
 	Triangle3D t3 = new Triangle3D(p3, p4, p8, Color.RED);
-	Triangle3D t4 = new Triangle3D(p1, p2, p5, Color.GREEN);
+	Triangle3D t4 = new Triangle3D(p1, p2, p5, Color.GREEN);*/
+	
+	SceneHandler sh = new SceneHandler(this);
 	
 
 
@@ -85,7 +87,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		
 		fpsc.update(delta);
 		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
-		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), t1, t2, t3, t4);
+		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), SceneHandler.getCurrentScene().getRenderEligibleTriangles());
 		view = Rasterizer.generateView(getWidth(), getHeight());
 		
 	}
