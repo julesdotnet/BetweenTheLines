@@ -1,5 +1,6 @@
 package net.jules.core.content.weapon;
 
+import net.jules.core.scene.ComposedGeoBody;
 import net.jules.core.scene.GeoBody;
 
 public sealed abstract class Weapon permits RangedWeapon, MeleeWeapon {
@@ -22,6 +23,8 @@ public sealed abstract class Weapon permits RangedWeapon, MeleeWeapon {
 	 * Automatically executes code on left click (what else bro, what else)
 	 */
 	public abstract void onRightClick();
+	
+	public abstract ComposedGeoBody getWeaponModel();
 	
 	protected String getDisplayName() {
 		return displayName;

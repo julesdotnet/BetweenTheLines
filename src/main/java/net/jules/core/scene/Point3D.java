@@ -1,5 +1,7 @@
 package net.jules.core.scene;
 
+import java.util.Arrays;
+
 public class Point3D {
 	private float x, y, z, w = 1;
 	private short u, v;
@@ -200,6 +202,22 @@ public class Point3D {
 	        u,
 	        v
 	    );
+	}
+	
+	public static Point3D getAverage(Point3D[] points) {
+		float [][] xyz = new float[points.length][3];
+		
+		for(int i = 0; i < points.length; i++) {
+			xyz[i][0] = points[i].getX();
+			xyz[i][1] = points[i].getY();
+			xyz[i][2] = points[i].getZ();
+		}
+		
+		float avgX = (float) Arrays.stream(xyz).mapToDouble(p -> p[0]).average().orElse(0);
+		float avgY = (float) Arrays.stream(xyz).mapToDouble(p -> p[1]).average().orElse(0);
+		float avgZ = (float) Arrays.stream(xyz).mapToDouble(p -> p[2]).average().orElse(0);
+		
+		return new Point3D(avgX, avgY, avgZ, 0, 0);
 	}
 	
 		

@@ -22,7 +22,7 @@ public class RenderPanel extends JPanel implements Runnable{
 	
 	BufferedImage view = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
 	
-	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 20 ,0, this);
+	FPSController fpsc = new FPSController(new Point3D(0, 0, 0, 0, 0), 0 ,0, this);
 	
 	/*Point3D p1 = new Point3D(-400, 400, 3000, 0, 0);
 	Point3D p2 = new Point3D(400, 400, 3000, 0, 0);
@@ -84,6 +84,7 @@ public class RenderPanel extends JPanel implements Runnable{
 		fpsc.update(delta);
 		fpsc.getCamera().recalculateAspect(getWidth(), getHeight());
 		r.rasterizeTriangles(fpsc.getCamera(), getWidth(), getHeight(), SceneHandler.getCurrentScene().getRenderEligibleTriangles());
+		r.rasterizeTriangles(fpsc.getCamera(),getWidth(), getHeight(), fpsc.getWeapon().getWeaponModel().getTriangles());
 		
 		HUDPanel.getInstance().addDebugText("current triangles: " + SceneHandler.getCurrentScene().getRenderEligibleTriangles().length, 10, 20);
 		

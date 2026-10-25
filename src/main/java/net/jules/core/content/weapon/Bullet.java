@@ -18,7 +18,6 @@ public class Bullet {
 
     // updatable
     private final Point3D currentPosition;
-    private boolean collisionAhead = false;
 
     private Bullet(
             Point3D origin,

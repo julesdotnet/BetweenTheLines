@@ -9,8 +9,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.jules.core.camera.Camera;
-import net.jules.core.content.weapon.Scar;
+import net.jules.core.content.weapon.*;
 import net.jules.core.scene.Point3D;
+import net.jules.graphics.HUDPanel;
 import net.jules.graphics.RenderPanel;
 
 public class FPSController extends Entity implements KeyListener, MouseMotionListener, MouseListener {
@@ -26,7 +27,7 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 	private final Camera camera;
 	
 	//game related stuff
-	Scar scar = new Scar(this);
+	Weapon weapon = new Scar(this);
 
 	public FPSController(Point3D position, float yaw, float pitch, RenderPanel rp) {
 		super(position, yaw, pitch);
@@ -42,7 +43,10 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 	public void update(float delta) {
 		handleMovement(delta);
 		
-		scar.update();
+		HUDPanel.getInstance().addDebugText("yaw: " + (int) camera.getYaw() + " | pitch: " + (int) camera.getPitch(), 10, 40);
+		HUDPanel.getInstance().addDebugText("x: " + (int) camera.getX() + "	y: " + (int) camera.getY() + "	z: " + (int) camera.getZ(), 10, 60);
+	
+		weapon.update();
 	}
 	
 	private void handleMovement(float delta) {
@@ -72,6 +76,12 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 		position.modX(dx * step);
 		position.modY(0);
 		position.modZ(dz * step);
+		
+		weapon.getWeaponModel().move(dx * step, 0, dz * step);
+	}
+	
+	public Weapon getWeapon() {
+		return weapon;
 	}
 
 	@Override
@@ -94,6 +104,7 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 		camera.setYaw(getYaw());
 		camera.setPitch(getPitch());
 		
+		weapon.getWeaponModel().rotateAround(getPosition(), (float) Math.toRadians(mX * MOUSE_SENSITIVITY), (float) Math.toRadians(mY * MOUSE_SENSITIVITY));
 	}
 
 	@Override
@@ -124,9 +135,9 @@ public class FPSController extends Entity implements KeyListener, MouseMotionLis
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) {
-			scar.onLeftClick();
+			weapon.onLeftClick();
 		} else if(e.getButton() == MouseEvent.BUTTON3) {
-			scar.onRightClick();
+			weapon.onRightClick();
 		}
 		
 	}
