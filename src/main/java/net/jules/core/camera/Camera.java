@@ -94,14 +94,15 @@ public class Camera {
 		return s;
 	}
 	
-	//modify point according to camera rotation and position
-	/*public Point3D adjustPointForCameraParams(Point3D p) {
-		Point3D returnPoint = new Point3D(p.getX() - getX(), p.getY() - getY(), p.getZ() - getZ(), p.getU(), p.getV());
+	/**
+	 * Same as projectToScreenSpace, but for a point that is already in camera space
+	 */
+	public ScreenPoint projectCameraSpaceToScreen(Point3D p, int width, int height) {
 		
-		returnPoint.rotate(yaw, pitch, roll, pos);
+		ClipSpacePoint c = new ClipSpacePoint(projectPointX(p.getX()), projectPointY(p.getY()), projectPointZ(p.getZ()), projectPointW(p.getZ()), p.getU(), p.getV());
 		
-		return returnPoint;
-	}*/
+		return c.toNDC().toScreenSpace(width, height);
+	}
 	
 	public Point3D adjustPointForCameraParams(Point3D p) {
 	    Point3D relative = new Point3D(
@@ -117,10 +118,6 @@ public class Camera {
 	    Point3D rotated = relative.rotate(
 	    	    -yaw, -pitch, -roll, origin
 	    	);
-
-	    /*System.out.println("Yaw: " + yaw);
-	    System.out.println("Before rotation: " + relative.getX());
-	    System.out.println("After rotation:  " + rotated.getX());*/
 
 	    return rotated;
 	}
@@ -232,4 +229,4 @@ public class Camera {
 		public float getZ( ) {
 			return pos.getZ();
 		}
-}	
+}

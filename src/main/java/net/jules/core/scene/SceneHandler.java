@@ -25,7 +25,6 @@ public class SceneHandler {
 		try {
 			mainScene.buildScene(SceneParser.parseSceneFromFile("/btlscenes/map1.btlscene"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		TinyLogger.log("Existing scenes at launch: " + sceneList.size());
